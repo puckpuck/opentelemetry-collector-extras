@@ -18,7 +18,7 @@ type metricsProcessor struct {
 	logger          *zap.Logger
 }
 
-func newMetricsProcessor(set processor.CreateSettings, cfg *Config) (*metricsProcessor, error) {
+func newMetricsProcessor(set processor.Settings, cfg *Config) (*metricsProcessor, error) {
 	p := &metricsProcessor{
 		config:          cfg,
 		cache:           cache.GetCache(set.ID.String(), cfg.CacheTtl, cfg.MetricGroups, set.Logger),

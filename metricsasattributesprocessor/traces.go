@@ -18,7 +18,7 @@ type tracesProcessor struct {
 	logger *zap.Logger
 }
 
-func newTracesProcessor(set processor.CreateSettings, cfg *Config) (*tracesProcessor, error) {
+func newTracesProcessor(set processor.Settings, cfg *Config) (*tracesProcessor, error) {
 	p := &tracesProcessor{
 		config: cfg,
 		cache:  cache.GetCache(set.ID.String(), cfg.CacheTtl, cfg.MetricGroups, set.Logger),

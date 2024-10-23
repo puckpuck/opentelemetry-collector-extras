@@ -53,7 +53,7 @@ func createDefaultConfig() component.Config {
 	}
 }
 
-func createMetricsProcessor(ctx context.Context, set processor.CreateSettings, cfg component.Config, nextConsumer consumer.Metrics) (processor.Metrics, error) {
+func createMetricsProcessor(ctx context.Context, set processor.Settings, cfg component.Config, nextConsumer consumer.Metrics) (processor.Metrics, error) {
 	p, err := newMetricsProcessor(set, cfg.(*Config))
 	if err != nil {
 		return nil, err
@@ -67,7 +67,7 @@ func createMetricsProcessor(ctx context.Context, set processor.CreateSettings, c
 		processorhelper.WithCapabilities(consumer.Capabilities{MutatesData: false}))
 }
 
-func createTracesProcessor(ctx context.Context, set processor.CreateSettings, cfg component.Config, nextConsumer consumer.Traces) (processor.Traces, error) {
+func createTracesProcessor(ctx context.Context, set processor.Settings, cfg component.Config, nextConsumer consumer.Traces) (processor.Traces, error) {
 	p, err := newTracesProcessor(set, cfg.(*Config))
 	if err != nil {
 		return nil, err
@@ -81,7 +81,7 @@ func createTracesProcessor(ctx context.Context, set processor.CreateSettings, cf
 		processorhelper.WithCapabilities(consumer.Capabilities{MutatesData: true}))
 }
 
-func createLogsProcessor(ctx context.Context, set processor.CreateSettings, cfg component.Config, nextConsumer consumer.Logs) (processor.Logs, error) {
+func createLogsProcessor(ctx context.Context, set processor.Settings, cfg component.Config, nextConsumer consumer.Logs) (processor.Logs, error) {
 	p, err := newLogsProcessor(set, cfg.(*Config))
 	if err != nil {
 		return nil, err
