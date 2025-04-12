@@ -92,29 +92,7 @@ func (mp *metricsProcessor) isMatchedMetric(mg common.MetricGroup, name string, 
 	// if this metric does not have the necessary attributes, we can skip it
 	// an id is created by concatenating the values of the attributes selected for the metric group which will
 	// be used to identify the MatchedMetricsCache for this metric group
-	id = ""
-	for _, ms := range mg.MetricsSelectors {
-		switch ms.AttributeType {
-		case common.AttributeTypeResource:
-			if s, ok := r.Attributes().Get(ms.Name); ok {
-				id += s.AsString() + MatcherDelim
-			} else {
-				return "", "", false
-			}
-		case common.AttributeTypeScope:
-			if s, ok := is.Attributes().Get(ms.Name); ok {
-				id += s.AsString() + MatcherDelim
-			} else {
-				return "", "", false
-			}
-		case common.AttributeTypeMetric:
-			if s, ok := metricAttrs.Get(ms.Name); ok {
-				id += s.AsString() + MatcherDelim
-			} else {
-				return "", "", false
-			}
-		}
-	}
+	id, _ = common.IsSelectable(mg.MetricsSelectors, r, is, metricAttrs)
 
 	for _, mm := range mg.MetricsMatchers {
 		if match, _ := mp.wildcardMatcher.Match(mm.InstrumentationScope, is.Name()); match {

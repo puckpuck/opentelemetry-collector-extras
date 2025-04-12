@@ -3,7 +3,11 @@ package common
 import (
 	"fmt"
 	"strings"
+
+	"go.opentelemetry.io/collector/pdata/pcommon"
 )
+
+const MatcherDelim = "_!@#_"
 
 type MetricGroup struct {
 	// Name of the metric group
@@ -82,4 +86,25 @@ type MetricsMatcher struct {
 
 	// New name for the metric (optional)
 	NewName string `mapstructure:"new_name"`
+}
+
+func IsSelectable(selectors []Selector, r pcommon.Resource, is pcommon.InstrumentationScope, attrs pcommon.Map) (string, bool) {
+	id := ""
+	for _, s := range selectors {
+		var val pcommon.Value
+		var ok bool
+		switch s.AttributeType {
+		case AttributeTypeResource:
+			val, ok = r.Attributes().Get(s.Name)
+		case AttributeTypeScope:
+			val, ok = is.Attributes().Get(s.Name)
+		default:
+			val, ok = attrs.Get(s.Name)
+		}
+		if !ok {
+			return "", false
+		}
+		id += val.AsString() + MatcherDelim
+	}
+	return id, true
 }

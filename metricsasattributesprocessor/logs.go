@@ -47,7 +47,7 @@ func (lp *logsProcessor) processLogs(_ context.Context, ld plog.Logs) (plog.Logs
 func (lp *logsProcessor) addMetricsToLog(r pcommon.Resource, is pcommon.InstrumentationScope, l plog.LogRecord) {
 	for _, configMG := range lp.config.MetricGroups {
 
-		if id, ok := lp.isSelectableLog(configMG, r, is, l.Attributes()); ok {
+		if id, ok := common.IsSelectable(configMG.TargetSelectors.LogsSelectors, r, is, l.Attributes()); ok {
 			added := 0
 			cacheMG := lp.cache.MetricGroups[configMG.Name]
 			cacheMG.Mutex.RLock()
@@ -74,32 +74,4 @@ func (lp *logsProcessor) addMetricsToLog(r pcommon.Resource, is pcommon.Instrume
 			cacheMG.Mutex.RUnlock()
 		}
 	}
-}
-
-func (lp *logsProcessor) isSelectableLog(mg common.MetricGroup, r pcommon.Resource, is pcommon.InstrumentationScope, logAttrs pcommon.Map) (id string, ok bool) {
-	id = ""
-	for _, ms := range mg.TargetSelectors.LogsSelectors {
-		switch ms.AttributeType {
-		case common.AttributeTypeResource:
-			if s, ok := r.Attributes().Get(ms.Name); ok {
-				id += s.AsString() + MatcherDelim
-			} else {
-				return "", false
-			}
-		case common.AttributeTypeScope:
-			if s, ok := is.Attributes().Get(ms.Name); ok {
-				id += s.AsString() + MatcherDelim
-			} else {
-				return "", false
-			}
-		case common.AttributeTypeLog:
-			if s, ok := logAttrs.Get(ms.Name); ok {
-				id += s.AsString() + MatcherDelim
-			} else {
-				return "", false
-			}
-		}
-	}
-
-	return id, true
 }

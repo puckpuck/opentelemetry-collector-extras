@@ -16,8 +16,6 @@ import (
 	"go.opentelemetry.io/collector/processor/processorhelper"
 )
 
-const MatcherDelim = "_!@#_"
-
 // Metrics is a processor that can consume metrics.
 type Metrics interface {
 	component.Component
