@@ -1,4 +1,4 @@
-IMAGE_REPOSITORY ?= "ghcr.io/puckpuck/opentelemetery-collector-extras/otelcol-custom"
+IMAGE_REPOSITORY ?= "ghcr.io/puckpuck/opentelemetry-collector-extras/otelcol-custom"
 IMAGE_TAG ?= "latest"
 
 .PHONY: install-builder
